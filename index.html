@@ -424,17 +424,17 @@ const BASE={
   inOn:true,inDur:.16,inEase:'crash',inBz:[.16,1,.3,1],inOver:.04,
   exit:'snap',outDur:.26,outEase:'snap',outBz:[.7,0,.3,1],outOver:0,
   shutter:360,quality:48,fx:.5,fy:.5,
-  shake:.15,roll:0,warp:0,aber:.25,glow:0,vig:.2,flash:0,contrast:0,lines:0,shock:0,grain:0,sparks:0,pstyle:'sparks',sharp:.45
+  shake:.15,roll:0,warp:0,aber:.25,glow:0,vig:.2,flash:0,contrast:0,lines:0,shock:0,grain:0,sharp:.45
 };
 const PRESETS=[
  {n:'Tarantino Crash',c:'Hook',p:{amount:3.0,inDur:.14,inEase:'crash',inOver:.05,outDur:.24,outEase:'snap',shutter:360,shake:.18,aber:.25,vig:.25}},
- {n:'Hook Slam',c:'Hook',p:{amount:4.0,inDur:.10,inEase:'impact',inOver:.10,outDur:.40,outEase:'snap',shutter:420,shake:.45,flash:.5,shock:.6,sparks:.5,aber:.35,vig:.3,glow:.3}},
+ {n:'Hook Slam',c:'Hook',p:{amount:4.0,inDur:.10,inEase:'impact',inOver:.10,outDur:.40,outEase:'snap',shutter:420,shake:.45,flash:.5,shock:.6,aber:.35,vig:.3,glow:.3}},
  {n:'Pull Reveal',c:'Hook',p:{inOn:false,amount:3.2,outDur:.30,outEase:'snap',shutter:360,shake:.1,aber:.2,vig:.2}},
- {n:'Punch & Shake',c:'Impact',p:{amount:2.1,inDur:.09,inEase:'impact',inOver:.12,outDur:.18,outEase:'crash',shutter:300,shake:.65,aber:.3,vig:.3,flash:.35,sparks:.3,contrast:.2}},
+ {n:'Punch & Shake',c:'Impact',p:{amount:2.1,inDur:.09,inEase:'impact',inOver:.12,outDur:.18,outEase:'crash',shutter:300,shake:.65,aber:.3,vig:.3,flash:.35,contrast:.2}},
  {n:'Beat Drop',c:'Impact',p:{amount:1.8,inDur:.07,inEase:'impact',inOver:.15,outDur:.35,outEase:'crash',shutter:300,shake:.5,shock:1,flash:.3,glow:.4,aber:.3,vig:.25,contrast:.25,warp:.25}},
  {n:'Kung-Fu Punch',c:'Impact',p:{amount:2.4,inDur:.08,inEase:'snap',inOver:.08,outDur:.12,outEase:'snap',shutter:280,shake:.8,warp:.5,lines:.6,aber:.35,vig:.3,contrast:.3}},
- {n:'Ember Strike',c:'Impact',p:{amount:2.2,inDur:.13,inEase:'crash',inOver:.08,outDur:.30,outEase:'smooth',shutter:320,sparks:1,pstyle:'embers',glow:.6,flash:.3,shake:.35,vig:.35,aber:.2,warp:.15,shock:.35}},
- {n:'Dust Impact',c:'Impact',p:{amount:2.0,inDur:.10,inEase:'impact',inOver:.06,outDur:.25,outEase:'crash',shutter:300,shake:.6,sparks:.8,pstyle:'dust',shock:.5,flash:.15,vig:.3,contrast:.15}},
+ {n:'Glow Strike',c:'Impact',p:{amount:2.2,inDur:.13,inEase:'crash',inOver:.08,outDur:.30,outEase:'smooth',shutter:320,glow:.6,flash:.3,shake:.35,vig:.35,aber:.2,warp:.15,shock:.35}},
+ {n:'Shock Hit',c:'Impact',p:{amount:2.0,inDur:.10,inEase:'impact',inOver:.06,outDur:.25,outEase:'crash',shutter:300,shake:.6,shock:.5,flash:.15,vig:.3,contrast:.15}},
  {n:'Whip Snap',c:'Style',p:{amount:2.3,inDur:.22,inEase:'whip',outDur:.22,outEase:'whip',shutter:560,shake:0,aber:.55,vig:0}},
  {n:'Dutch Slam',c:'Style',p:{amount:2.7,inDur:.18,inEase:'whip',inOver:.06,outDur:.20,outEase:'whip',roll:7,shutter:450,shake:.2,aber:.4,vig:.15}},
  {n:'Anime Rush',c:'Style',p:{amount:3.4,inDur:.12,inEase:'snap',outDur:.30,outEase:'rocket',shutter:540,lines:1,aber:.45,glow:.25,flash:.2,shake:.25,vig:.1}},
@@ -510,9 +510,9 @@ function regionState(r,t){
   const evOn=landing&&age<1.3;
   return {r,s,phase,rot:th,tx,ty,ext,vig:r.vig*z,ex:1+r.flash*.6*eF*str,
     glow:r.glow*(.35*z+.65*eF*str),warp:r.warp*eW*str,contrast:r.contrast*eF*str,grain:r.grain*clamp(z*4,0,1),
-    age:evOn?age:-1,shockAmp:evOn?r.shock*str:0,spk:evOn?r.sparks*str:0,evSeed:(r.id*13.7+evOut*5.1+.37)%97};
+    age:evOn?age:-1,shockAmp:evOn?r.shock*str:0,evSeed:(r.id*13.7+evOut*5.1+.37)%97};
 }
-const IDENT={r:null,s:1,phase:'',rot:0,tx:0,ty:0,ext:1,vig:0,ex:1,glow:0,warp:0,contrast:0,grain:0,age:-1,shockAmp:0,spk:0,evSeed:0};
+const IDENT={r:null,s:1,phase:'',rot:0,tx:0,ty:0,ext:1,vig:0,ex:1,glow:0,warp:0,contrast:0,grain:0,age:-1,shockAmp:0,evSeed:0};
 function stateAt(t){
   let best=null;
   for(const r of regions){ if(r.start>t)break; const st=regionState(r,t); if(st&&(!best||r.start>=best.r.start))best=st; }
@@ -546,7 +546,6 @@ uniform vec4 u_a;uniform vec4 u_b;uniform vec2 u_ext;uniform int u_N;
 uniform float u_ab,u_vig,u_ex,u_sharp,u_lod,u_seed,u_lvl;
 uniform vec4 u_fx;   // glow, warp, contrast, grain
 uniform vec4 u_ev;   // eventAge, shockAmp, speedLines, sparks
-uniform vec4 u_p;    // particleStyle, eventSeed
 in vec2 v_uv;out vec4 o;
 float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
 float rim=0.;
@@ -578,35 +577,6 @@ vec3 bicubic(vec2 uv){
         +T(vec2(t0.x,t3.y))*w0.x*w3.y+T(vec2(t12.x,t3.y))*w12.x*w3.y+T(vec2(t3.x,t3.y))*w3.x*w3.y;
   return max(r,0.);}
 vec3 L(vec2 uv){return textureLod(u_tex,uv,u_lod).rgb;}
-vec3 particles(vec2 uv){
-  float age=u_ev.x,amt=u_ev.w;
-  if(amt<=0.||age<0.)return vec3(0.);
-  float style=u_p.x,sd=u_p.y;
-  vec2 d=(uv-u_f)*vec2(u_asp,1.);vec3 acc=vec3(0.);
-  int n=int(mix(16.,60.,clamp(amt,0.,1.)));
-  for(int i=0;i<60;i++){
-    if(i>=n)break;
-    float fi=float(i);
-    float h1=hash(vec2(fi,sd)),h2=hash(vec2(fi+11.3,sd+1.7)),h3=hash(vec2(fi+23.9,sd+4.1));
-    float life=mix(.4,1.1,h3)*(style==1.?1.5:1.);
-    if(age>life)continue;
-    float ang=h1*6.28318;
-    float spd=mix(.4,1.7,h2)*(style==1.?.35:1.);
-    vec2 dir=vec2(cos(ang),sin(ang));
-    float g=(style==2.?-.35:(style==1.?0.:.9));
-    float a=age;float tr=spd*(1.-exp(-a*4.5))/4.5;
-    vec2 pos=dir*tr+vec2(0.,-g*a*a*.5);
-    float a2=max(a-.035,0.);float tr2=spd*(1.-exp(-a2*4.5))/4.5;
-    vec2 pos2=dir*tr2+vec2(0.,-g*a2*a2*.5);
-    vec2 pa=d-pos2,ba=pos-pos2;float h=clamp(dot(pa,ba)/max(dot(ba,ba),1e-6),0.,1.);
-    float dist=length(pa-ba*h);float fade=1.-a/life;
-    float size=(style==1.?.013:.0032)*(.6+h3)*fade+.0007;
-    float m=smoothstep(size,0.,dist)*fade;
-    vec3 c=style==0.?vec3(1.,.8,.4)*2.2:(style==1.?vec3(.95,.9,.85)*.4:vec3(1.,.42,.1)*1.8);
-    acc+=c*m;
-  }
-  return acc;
-}
 void main(){
   vec2 P=distort(v_uv);
   float d=abs(log(u_b.x/u_a.x));
@@ -647,7 +617,6 @@ void main(){
     float m=smoothstep(.6,1.,n)*smoothstep(.22,.75,r)*(.55+.45*n2);
     col=mix(col,vec3(1.),m*u_ev.z*.6);
   }
-  col+=particles(v_uv);
   if(u_fx.z!=0.){float l=dot(col,vec3(.299,.587,.114));col=mix(vec3(l),col,1.+u_fx.z*.35);col=(col-.5)*(1.+u_fx.z*.3)+.5;}
   if(u_fx.w>0.)col+=(hash(gl_FragCoord.xy+u_seed*91.)-.5)*u_fx.w*.24;
   vec2 vp=(v_uv-.5)*vec2(u_asp,1.);float vg=smoothstep(.28,.95,length(vp)*1.15);
@@ -659,7 +628,7 @@ function sh(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.co
 const prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(prog);
 if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(prog));
 gl.useProgram(prog);gl.bindVertexArray(gl.createVertexArray());
-const U={};['u_tex','u_size','u_asp','u_f','u_a','u_b','u_ext','u_N','u_ab','u_vig','u_ex','u_sharp','u_lod','u_seed','u_lvl','u_fx','u_ev','u_p'].forEach(n=>U[n]=gl.getUniformLocation(prog,n));
+const U={};['u_tex','u_size','u_asp','u_f','u_a','u_b','u_ext','u_N','u_ab','u_vig','u_ex','u_sharp','u_lod','u_seed','u_lvl','u_fx','u_ev'].forEach(n=>U[n]=gl.getUniformLocation(prog,n));
 let tex=null,texW=0,texH=0,texLevels=1,mipsOn=false,anyGlow=false;
 function allocTexture(w,h){
   if(tex)gl.deleteTexture(tex);
@@ -709,7 +678,6 @@ function uploadFrame(){
   needUpload=false;
 }
 let seed=0;
-const PSTYLE={sparks:0,dust:1,embers:2};
 function draw(t){
   if(!tex)return;
   gl.viewport(0,0,cv.width,cv.height);
@@ -729,8 +697,7 @@ function draw(t){
   gl.uniform1f(U.u_sharp,sharp);gl.uniform1f(U.u_lod,lod);gl.uniform1f(U.u_lvl,texLevels);
   gl.uniform1f(U.u_seed,(seed=(seed+1)%97)*.013);
   gl.uniform4f(U.u_fx,st1.glow,st1.warp,st1.contrast,st1.grain);
-  gl.uniform4f(U.u_ev,st1.age,st1.shockAmp,r?r.lines*Math.min(1,ratio*14):0,st1.spk);
-  gl.uniform4f(U.u_p,r?PSTYLE[r.pstyle]||0:0,st1.evSeed,0,0);
+  gl.uniform4f(U.u_ev,st1.age,st1.shockAmp,r?r.lines*Math.min(1,ratio*14):0,0);
   gl.drawArrays(gl.TRIANGLES,0,3);
   updateHUD(t,st1);
 }
@@ -1115,10 +1082,6 @@ const R=()=>sel()||{};
   mkRow(b,{k:'vig',label:'Vignette squeeze',...PCT});mkRow(b,{k:'flash',label:'Exposure flash',...PCT});mkRow(b,{k:'contrast',label:'Contrast punch',...PCT});
   b=sec(P,'Stylize');
   mkRow(b,{k:'lines',label:'Speed lines',...PCT});mkRow(b,{k:'shock',label:'Shockwave',...PCT});mkRow(b,{k:'grain',label:'Film grain',...PCT});
-  b=sec(P,'Particles');
-  mkRow(b,{k:'sparks',label:'Amount',...PCT});
-  mkChips(b,[['sparks','Sparks'],['dust','Dust'],['embers','Embers']],()=>R().pstyle,v=>{sel().pstyle=v;});
-  b.insertAdjacentHTML('beforeend','<div class="note">Particles burst from the focus point the moment each transition lands.</div>');
   b=sec(P,'Detail');
   mkRow(b,{k:'sharp',label:'Crisp detail',min:0,max:1.5,step:.01,unit:'%',disp:v=>v*100,parse:n=>n/100,dstep:1,dec:0});
   b.insertAdjacentHTML('beforeend','<div class="note">Sharpens the zoomed image. Shoot in 4K for the cleanest punch-ins.</div>');
